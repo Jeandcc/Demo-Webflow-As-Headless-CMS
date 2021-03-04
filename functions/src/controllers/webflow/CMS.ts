@@ -14,6 +14,9 @@ export default class WfCMS {
     return [];
   }
 
+  // This currently only supports 100 items for each collection list.
+  // We need to allow this to fetch more items, and also to start
+  // taking into consideration API rate limits.
   static async getCollectionItems(collectionId: string): Promise<any> {
     try {
       const res = await wfApi.get(`/collections/${collectionId}/items`);
