@@ -7,6 +7,7 @@ import WebflowCMSSynchronizer from './controllers/webflow/Synchronizer';
 
 import SitePublicationModel from './models/SitePublications';
 
+// https://us-central1-headless-webflow-cms.cloudfunctions.net/sitePublishWebhook
 export const sitePublishWebhook = functions.https.onRequest(
   async (req, res) => {
     const payloadShape = yup.object().shape({
