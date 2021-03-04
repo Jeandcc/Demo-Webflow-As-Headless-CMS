@@ -1,10 +1,9 @@
 /* eslint-disable dot-notation */
 import * as functions from 'firebase-functions';
 import { error } from 'firebase-functions/lib/logger';
-
 import * as yup from 'yup';
-import WebflowCMSSynchronizer from './controllers/webflow/Synchronizer';
 
+import WebflowCMSSynchronizer from './controllers/webflow/Synchronizer';
 import SitePublicationModel from './models/SitePublications';
 
 // https://us-central1-headless-webflow-cms.cloudfunctions.net/sitePublishWebhook
