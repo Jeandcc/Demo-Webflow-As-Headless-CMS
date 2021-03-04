@@ -1,11 +1,11 @@
-import { fireStore } from '../services/firebase';
+import { fireStore } from '../services/envVars';
 
 interface ISitePublication {
   siteId: string;
   date: number;
 }
 
-export default class SitePublications {
+export default class SitePublicationModel {
   static collectionName = 'sitePublications';
 
   static async add(

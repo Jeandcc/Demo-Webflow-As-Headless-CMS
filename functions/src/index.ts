@@ -1,9 +1,11 @@
+/* eslint-disable dot-notation */
 import * as functions from 'firebase-functions';
 import { error } from 'firebase-functions/lib/logger';
 
 import * as yup from 'yup';
+import WebflowCMSSynchronizer from './controllers/webflow/Synchronizer';
 
-import SitePublications from './models/SitePublications';
+import SitePublicationModel from './models/SitePublications';
 
 export const sitePublishWebhook = functions.https.onRequest(
   async (req, res) => {
@@ -22,10 +24,14 @@ export const sitePublishWebhook = functions.https.onRequest(
 
     const { publishTime, site } = req.body;
 
-    await SitePublications.add({
-      siteId: site,
-      date: publishTime,
-    });
+    await Promise.all([
+      SitePublicationModel.add({
+        siteId: site,
+        date: publishTime,
+      }),
+
+      WebflowCMSSynchronizer.syncWithFirebase(site),
+    ]);
 
     res.status(201).json({ message: 'Site publication registered' });
   },
