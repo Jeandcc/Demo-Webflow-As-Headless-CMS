@@ -1,16 +1,16 @@
-const { baseConfig, pageEntries } = require("./config/webpackBase");
+const { baseConfig, pageEntries } = require('./config/webpackBase');
 
-const path = require("path");
+const path = require('path');
 
-baseConfig.mode = "development";
+baseConfig.mode = 'development';
 module.exports = [
   {
-    name: "Local Overrides",
+    name: 'Local Overrides',
     entry: pageEntries,
     output: {
       path: path.resolve(
         __dirname,
-        "local-project-xxx/project-xxx.web.app/scripts/"
+        'local-demo-webflow-as-headless/demo-webflow-as-headless.web.app/scripts/',
       ),
     },
     ...baseConfig,
