@@ -1,3 +1,14 @@
+declare global {
+  interface Window {
+    usesFirebase: boolean;
+    usesMegaThemes: boolean;
+    websiteUniqueIds: {
+      ga: string | null;
+      gtm: string | null;
+    };
+  }
+}
+
 type TGAEventNames =
   | 'Opened Desktop Popup'
   | 'Closed Desktop Popup'

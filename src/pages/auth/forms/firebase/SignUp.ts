@@ -107,7 +107,7 @@ export default class SignUpForm extends BaseAuthForm {
 
       // The below is required so global scripts run once again and
       // redirects users to welcome page
-      window.location.reload();
+      window.location.href = '/authors';
     } catch (error) {
       this.errorDispenser?.showMessage(error.message);
     } finally {

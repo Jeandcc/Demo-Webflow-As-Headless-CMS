@@ -76,7 +76,7 @@ export default class JoinForm extends BaseAuthForm {
 
       this.saveDataToLocalStorage(hash);
 
-      window.location.reload();
+      window.location.href = '/authors';
     } catch (error) {
       this.errorDispenser?.showMessage(error.message);
       loadIndicator.close();
