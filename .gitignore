@@ -106,3 +106,6 @@ public
 
 # Firebase related
 .firebase/
+
+
+local-demo-webflow-as-headless/**

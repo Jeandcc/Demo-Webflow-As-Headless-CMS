@@ -1,23 +1,23 @@
-const VueLoaderPlugin = require("vue-loader/lib/plugin");
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 const baseConfig = {
-  mode: "production",
+  mode: 'production',
   module: {
     rules: [
       {
         test: /\.tsx?$/,
-        use: "ts-loader",
+        use: 'ts-loader',
         exclude: /node_modules/,
       },
       {
         test: /\.vue$/,
-        loader: "vue-loader",
+        loader: 'vue-loader',
         options: {
           loaders: {
             ts: [
               {
-                loader: "ts-loader",
+                loader: 'ts-loader',
                 options: {
                   appendTsSuffixTo: [/\.vue$/],
                 },
@@ -32,16 +32,17 @@ const baseConfig = {
     ],
   },
   resolve: {
-    extensions: [".tsx", ".ts", ".js", ".css"],
+    extensions: ['.tsx', '.ts', '.js', '.css'],
     alias: {
-      vue$: "vue/dist/vue.esm.js",
+      vue$: 'vue/dist/vue.esm.js',
     },
   },
   plugins: [new VueLoaderPlugin(), new CleanWebpackPlugin()],
 };
 
 const pageEntries = {
-  home: "./src/pages/home/index.ts",
+  auth: './src/pages/auth/index.ts',
+  authors: './src/pages/authors/index.ts',
 };
 
 module.exports = { baseConfig, pageEntries };

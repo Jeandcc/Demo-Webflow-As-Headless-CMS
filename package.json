@@ -9,7 +9,10 @@
     "dev": "webpack -w --config ./webpack.config.dev.js"
   },
   "dependencies": {
-    "vue": "^2.6.12"
+    "firebase": "^8.2.10",
+    "vue": "^2.6.12",
+    "vue-toasted": "^1.1.28",
+    "vuefire": "^2.2.5"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.9.1",
