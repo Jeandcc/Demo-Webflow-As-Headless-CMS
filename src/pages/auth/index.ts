@@ -34,47 +34,50 @@ const formFadesDuration = 200;
 
 if ((window as any).usesFirebase) {
   FireAuth.onAuthStateChanged(user => {
-    if (!user) {
-      new FBLoginForm(loginForm);
-      new FBSignUpForm(signupForm);
-      new FBRecoverForm(recoverForm);
+    if (user) {
+      window.location.href = '/authors';
+      return;
+    }
 
-      const showLoginForm = () => {
-        $(loginForm).parent().delay(formFadesDuration).fadeIn();
-        $(signupForm).parent().fadeOut(formFadesDuration);
-        $(recoverForm).parent().fadeOut(formFadesDuration);
-        $(joinForm).parent().fadeOut(formFadesDuration);
-      };
+    new FBLoginForm(loginForm);
+    new FBSignUpForm(signupForm);
+    new FBRecoverForm(recoverForm);
 
-      const showSignUpForm = () => {
-        $(loginForm).parent().fadeOut(formFadesDuration);
-        $(signupForm).parent().delay(formFadesDuration).fadeIn();
-        $(recoverForm).parent().fadeOut(formFadesDuration);
-        $(joinForm).parent().fadeOut(formFadesDuration);
-      };
+    const showLoginForm = () => {
+      $(loginForm).parent().delay(formFadesDuration).fadeIn();
+      $(signupForm).parent().fadeOut(formFadesDuration);
+      $(recoverForm).parent().fadeOut(formFadesDuration);
+      $(joinForm).parent().fadeOut(formFadesDuration);
+    };
 
-      const showRecoverForm = () => {
-        $(loginForm).parent().fadeOut(formFadesDuration);
-        $(signupForm).parent().fadeOut(formFadesDuration);
-        $(recoverForm).parent().delay(formFadesDuration).fadeIn();
-        $(joinForm).parent().fadeOut(formFadesDuration);
-      };
+    const showSignUpForm = () => {
+      $(loginForm).parent().fadeOut(formFadesDuration);
+      $(signupForm).parent().delay(formFadesDuration).fadeIn();
+      $(recoverForm).parent().fadeOut(formFadesDuration);
+      $(joinForm).parent().fadeOut(formFadesDuration);
+    };
 
-      $("[data-elem='show-login']").on('click', () => {
-        showLoginForm();
-      });
+    const showRecoverForm = () => {
+      $(loginForm).parent().fadeOut(formFadesDuration);
+      $(signupForm).parent().fadeOut(formFadesDuration);
+      $(recoverForm).parent().delay(formFadesDuration).fadeIn();
+      $(joinForm).parent().fadeOut(formFadesDuration);
+    };
 
-      $("[data-elem='show-signup']").on('click', () => {
-        showSignUpForm();
-      });
+    $("[data-elem='show-login']").on('click', () => {
+      showLoginForm();
+    });
 
-      $("[data-elem='show-recover']").on('click', () => {
-        showRecoverForm();
-      });
+    $("[data-elem='show-signup']").on('click', () => {
+      showSignUpForm();
+    });
 
-      if (window.localStorage.getItem('previously-logged-in')) {
-        showLoginForm();
-      }
+    $("[data-elem='show-recover']").on('click', () => {
+      showRecoverForm();
+    });
+
+    if (window.localStorage.getItem('previously-logged-in')) {
+      showLoginForm();
     }
   });
 } else {

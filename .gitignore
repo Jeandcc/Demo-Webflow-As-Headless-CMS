@@ -108,4 +108,4 @@ public
 .firebase/
 
 
-local-demo-webflow-as-headless/**
+headless-webflow-cms.web.app/**
