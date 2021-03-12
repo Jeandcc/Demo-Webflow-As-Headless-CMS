@@ -1,36 +1,37 @@
 import Vue from 'vue';
 import { firestorePlugin } from 'vuefire';
 
-import firebase from 'firebase';
-import { FireAuth, FireDB } from '../../../../services/firebase';
+import { FireAuth } from '../../../../services/firebase';
 
-import MessageToAuthor from './MessageToAuthor';
+import UserInteractionsController from '../../../../controllers/UserInteractions';
+
+import UserInteractionsModel, {
+  IInteractionsWithAuthor,
+} from '../../../../models/UserInteractions';
+
+import Comment from '../../../../components/Comment';
 
 Vue.use(firestorePlugin);
-
-const authorMessagesCollection = FireDB.collection(
-  `${document.documentElement.getAttribute('data-wf-site')}-author-messages`,
-);
 
 export default Vue.component('authors-listing', {
   props: ['author'],
 
-  components: { MessageToAuthor },
+  components: { Comment },
 
   data() {
     return {
-      messageToAuthor: '',
-      authorMessages: null as null | { messages: any[] },
       user: FireAuth.currentUser,
+      interactionsWithAuthor: null as null | IInteractionsWithAuthor,
+      messageToAuthor: '',
     };
   },
 
   computed: {
     messages(): any[] {
-      return (
-        this.authorMessages?.messages?.sort(
-          (a, b) => b.createdAt - a.createdAt,
-        ) || []
+      if (!this.interactionsWithAuthor?.messages) return [];
+
+      return this.interactionsWithAuthor.messages.sort(
+        (a, b) => b.createdAt - a.createdAt,
       );
     },
   },
@@ -39,7 +40,10 @@ export default Vue.component('authors-listing', {
     author: {
       immediate: true,
       handler(author) {
-        this.$bind('authorMessages', authorMessagesCollection.doc(author.id));
+        this.$bind(
+          'interactionsWithAuthor',
+          UserInteractionsModel.collectionRef.doc(author.id),
+        );
       },
     },
   },
@@ -48,71 +52,33 @@ export default Vue.component('authors-listing', {
     async sendMessage(e: Event): Promise<void> {
       e.preventDefault();
 
-      if (!FireAuth.currentUser) return;
-
-      await authorMessagesCollection.doc(this.author.id).set(
-        {
-          messages: firebase.firestore.FieldValue.arrayUnion({
-            author: {
-              name: FireAuth.currentUser.displayName,
-              id: FireAuth.currentUser.uid,
-            },
-            text: this.messageToAuthor,
-            createdAt: Date.now(),
-          }),
-        },
-        { merge: true },
-      );
+      await UserInteractionsController.addComment({
+        targetId: this.author.id,
+        comment: this.messageToAuthor,
+      });
 
       this.messageToAuthor = '';
     },
 
     async like(): Promise<void> {
-      if (!FireAuth.currentUser) return;
-
-      await authorMessagesCollection.doc(this.author.id).set(
-        {
-          likes: firebase.firestore.FieldValue.arrayUnion(
-            FireAuth.currentUser.uid,
-          ),
-          dislikes: firebase.firestore.FieldValue.arrayRemove(
-            FireAuth.currentUser.uid,
-          ),
-        },
-        { merge: true },
-      );
+      await UserInteractionsController.setLikeValue({
+        targetId: this.author.id,
+        value: 1,
+      });
     },
 
     async dislike(): Promise<void> {
-      if (!FireAuth.currentUser) return;
-
-      await authorMessagesCollection.doc(this.author.id).set(
-        {
-          likes: firebase.firestore.FieldValue.arrayRemove(
-            FireAuth.currentUser.uid,
-          ),
-          dislikes: firebase.firestore.FieldValue.arrayUnion(
-            FireAuth.currentUser.uid,
-          ),
-        },
-        { merge: true },
-      );
+      await UserInteractionsController.setLikeValue({
+        targetId: this.author.id,
+        value: -1,
+      });
     },
 
     async removeLikeAndDislike(): Promise<void> {
-      if (!FireAuth.currentUser) return;
-
-      await authorMessagesCollection.doc(this.author.id).set(
-        {
-          likes: firebase.firestore.FieldValue.arrayRemove(
-            FireAuth.currentUser.uid,
-          ),
-          dislikes: firebase.firestore.FieldValue.arrayRemove(
-            FireAuth.currentUser.uid,
-          ),
-        },
-        { merge: true },
-      );
+      await UserInteractionsController.setLikeValue({
+        targetId: this.author.id,
+        value: 0,
+      });
     },
   },
 

@@ -7,7 +7,6 @@ import { FireAuth } from '../../services/firebase';
 import FBLoginForm from './forms/firebase/Login';
 import FBSignUpForm from './forms/firebase/SignUp';
 import FBRecoverForm from './forms/firebase/RecoverPass';
-import JoinForm from './forms/JoinWithoutFirebase';
 
 const loginForm = document.querySelector(
   'form#wf-form-login',
@@ -80,8 +79,6 @@ if ((window as any).usesFirebase) {
     }
   });
 } else {
-  new JoinForm(joinForm);
-
   $(loginForm).parent().fadeOut(formFadesDuration);
   $(signupForm).parent().fadeOut(formFadesDuration);
   $(recoverForm).parent().fadeOut(formFadesDuration);

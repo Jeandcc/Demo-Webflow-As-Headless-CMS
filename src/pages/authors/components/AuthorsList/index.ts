@@ -1,13 +1,15 @@
 import Vue from 'vue';
 import { firestorePlugin } from 'vuefire';
 
-import { FireDB } from '../../../../services/firebase';
+import AuthorsModel from '../../../../models/Authors';
 
 import AuthorsListItem from './AuthorsListItem';
 
 Vue.use(firestorePlugin);
 
 export default Vue.component('authors-listing', {
+  components: { AuthorsListItem },
+
   data() {
     return {
       authors: [],
@@ -15,12 +17,8 @@ export default Vue.component('authors-listing', {
   },
 
   firestore: {
-    authors: FireDB.collection(
-      `${document.documentElement.getAttribute('data-wf-site')}-author`,
-    ),
+    authors: AuthorsModel.collectionRef,
   },
-
-  components: { AuthorsListItem },
 
   template: `
   <div class="g_people">
