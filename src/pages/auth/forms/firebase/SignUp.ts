@@ -3,7 +3,6 @@
 import { FireAuth } from '../../../../services/firebase';
 import GAEventsEmitter from '../../../../services/ga';
 
-import EmailValidator from '../../../../controllers/validators/EmailValidator';
 import { loadIndicator } from '../../../../components/loadIndicator';
 
 import BaseAuthForm from '../BaseAuthForm';
@@ -105,8 +104,6 @@ export default class SignUpForm extends BaseAuthForm {
 
       await this.saveDisplayName();
 
-      // The below is required so global scripts run once again and
-      // redirects users to welcome page
       window.location.href = '/authors';
     } catch (error) {
       this.errorDispenser?.showMessage(error.message);
@@ -115,32 +112,7 @@ export default class SignUpForm extends BaseAuthForm {
     }
   }
 
-  private checkIfIsValidEmail() {
-    if (!EmailValidator.isValidWorkEmail(this.dom.email.value)) {
-      const ERROR_TEXT = 'Invalid work email provided';
-
-      const errorMessageEl = $(this.dom.email).nextAll(
-        '[data-elem="invalid-work-email-message"]',
-      )[0];
-
-      if (errorMessageEl instanceof HTMLElement) {
-        $(errorMessageEl).find('div').text(ERROR_TEXT);
-        $(errorMessageEl).css('display', 'flex');
-      } else {
-        this.errorDispenser?.showMessage(ERROR_TEXT);
-      }
-
-      throw new Error('Invalid Email');
-    }
-  }
-
   private async signUpToFirebase(): Promise<void> {
-    try {
-      this.checkIfIsValidEmail();
-    } catch (e) {
-      return;
-    }
-
     await FireAuth.createUserWithEmailAndPassword(
       this.dom.email.value,
       this.dom.pass.value,

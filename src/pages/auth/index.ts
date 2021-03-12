@@ -35,7 +35,6 @@ const formFadesDuration = 200;
 if ((window as any).usesFirebase) {
   FireAuth.onAuthStateChanged(user => {
     if (user) {
-      window.location.href = '/authors';
       return;
     }
 

@@ -42,6 +42,8 @@ export default class LoginForm extends BaseAuthForm {
         method: 'Firebase',
         label: FireAuth.currentUser?.uid,
       });
+
+      window.location.href = '/authors';
     } catch (error) {
       this.errorDispenser?.showMessage(error.message);
     } finally {
