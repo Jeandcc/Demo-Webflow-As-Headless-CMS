@@ -21,13 +21,14 @@ export default Vue.component('authors-listing', {
     return {
       messageToAuthor: '',
       authorMessages: null as null | { messages: any[] },
+      user: FireAuth.currentUser,
     };
   },
 
   computed: {
     messages(): any[] {
       return (
-        this.authorMessages?.messages.sort(
+        this.authorMessages?.messages?.sort(
           (a, b) => b.createdAt - a.createdAt,
         ) || []
       );
@@ -64,6 +65,54 @@ export default Vue.component('authors-listing', {
       );
 
       this.messageToAuthor = '';
+    },
+
+    async like(): Promise<void> {
+      if (!FireAuth.currentUser) return;
+
+      await authorMessagesCollection.doc(this.author.id).set(
+        {
+          likes: firebase.firestore.FieldValue.arrayUnion(
+            FireAuth.currentUser.uid,
+          ),
+          dislikes: firebase.firestore.FieldValue.arrayRemove(
+            FireAuth.currentUser.uid,
+          ),
+        },
+        { merge: true },
+      );
+    },
+
+    async dislike(): Promise<void> {
+      if (!FireAuth.currentUser) return;
+
+      await authorMessagesCollection.doc(this.author.id).set(
+        {
+          likes: firebase.firestore.FieldValue.arrayRemove(
+            FireAuth.currentUser.uid,
+          ),
+          dislikes: firebase.firestore.FieldValue.arrayUnion(
+            FireAuth.currentUser.uid,
+          ),
+        },
+        { merge: true },
+      );
+    },
+
+    async removeLikeAndDislike(): Promise<void> {
+      if (!FireAuth.currentUser) return;
+
+      await authorMessagesCollection.doc(this.author.id).set(
+        {
+          likes: firebase.firestore.FieldValue.arrayRemove(
+            FireAuth.currentUser.uid,
+          ),
+          dislikes: firebase.firestore.FieldValue.arrayRemove(
+            FireAuth.currentUser.uid,
+          ),
+        },
+        { merge: true },
+      );
     },
   },
 
